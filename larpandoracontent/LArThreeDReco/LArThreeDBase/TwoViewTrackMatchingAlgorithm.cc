@@ -11,7 +11,7 @@
 #include "larpandoracontent/LArHelpers/LArClusterHelper.h"
 #include "larpandoracontent/LArHelpers/LArGeometryHelper.h"
 
-#include "larpandoracontent/LArObjects/LArTrackOverlapResult.h"
+#include "larpandoracontent/LArObjects/LArTrackTwoViewOverlapResult.h"
 
 #include "larpandoracontent/LArThreeDReco/LArThreeDBase/TwoViewTrackMatchingAlgorithm.h"
 
@@ -188,5 +188,7 @@ StatusCode TwoViewTrackMatchingAlgorithm<T>::ReadSettings(const TiXmlHandle xmlH
 }
 
 template class TwoViewTrackMatchingAlgorithm<float>;
+template class TwoViewTrackMatchingAlgorithm<TwoViewTransverseOverlapResult>;
+
 
 } // namespace lar_content
