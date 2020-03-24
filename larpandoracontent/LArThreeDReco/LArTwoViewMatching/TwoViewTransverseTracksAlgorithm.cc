@@ -38,9 +38,11 @@ void TwoViewTransverseTracksAlgorithm::CalculateOverlapResult(const Cluster *con
 
     // TODO Create a fully-fledged overlap result object and fill it with useful information
     const float xOverlap(std::min(xMax1, xMax2) - std::max(xMin1, xMin2));
+    TwoViewXOverlap twoViewXOverlap(xMin1, xMax1, xMin2, xMax2, xOverlap);
+    TwoViewTransverseOverlapResult twoViewTransverseOverlapResult(twoViewXOverlap);
 
     if (xOverlap > std::numeric_limits<float>::epsilon())
-        m_overlapMatrix.SetOverlapResult(pCluster1, pCluster2, xOverlap);
+        m_overlapMatrix.SetOverlapResult(pCluster1, pCluster2, twoViewTransverseOverlapResult);
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -87,7 +89,7 @@ StatusCode TwoViewTransverseTracksAlgorithm::ReadSettings(const TiXmlHandle xmlH
     PANDORA_RETURN_RESULT_IF_AND_IF(STATUS_CODE_SUCCESS, STATUS_CODE_NOT_FOUND, !=, XmlHelper::ReadValue(xmlHandle,
         "NMaxMatrixToolRepeats", m_nMaxMatrixToolRepeats));
 
-    return TwoViewTrackMatchingAlgorithm<float>::ReadSettings(xmlHandle);
+    return TwoViewTrackMatchingAlgorithm<TwoViewTransverseOverlapResult>::ReadSettings(xmlHandle);
 }
 
 } // namespace lar_content
