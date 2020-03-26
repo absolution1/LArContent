@@ -7,6 +7,7 @@
  */
 
 #include <algorithm>
+#include <iostream>
 
 #include "larpandoracontent/LArHelpers/LArDiscreteCumulativeDistributionHelper.h"
 
@@ -63,7 +64,7 @@ float LArDiscreteCumulativeDistributionHelper::FindY(const DiscreteCumulativeDis
     return y;
 }
 
-void LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(const pandora::CaloHitList &caloHitList, const DiscreteCumulativeDistribution &distribution)
+void LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(pandora::CaloHitList caloHitList, DiscreteCumulativeDistribution &distribution)
 {
     caloHitList.sort(LArClusterHelper::SortHitsByPositionInX);
     for (const pandora::CaloHit *const pCaloHit : caloHitList)

@@ -41,7 +41,7 @@ public:
      *
      *  @return the Y value
      */
-    static void FindY(const DiscreteCumulativeDistribution &distribution, const float &x);
+    static float FindY(const DiscreteCumulativeDistribution &distribution, const float &x);
 
     /**
      *  @brief  Fill and create a cumulatie distribution using a CaloHitList
@@ -51,8 +51,8 @@ public:
      *
      *  @return
      */
-    static void CreateDistributionFromCaloHits(const pandora::CaloHitList &caloHitList, 
-            const DiscreteCumulativeDistribution &distribution);
+    static void CreateDistributionFromCaloHits(pandora::CaloHitList caloHitList, 
+            DiscreteCumulativeDistribution &distribution);
 
     /**
      *  @brief  Full computation of PValue(trueKs>measuredKs|distA==distB)
