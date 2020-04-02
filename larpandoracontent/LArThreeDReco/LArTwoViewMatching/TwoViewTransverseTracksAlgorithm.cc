@@ -106,7 +106,6 @@ void TwoViewTransverseTracksAlgorithm::CalculateOverlapResult(const Cluster *con
 
     TwoViewTransverseOverlapResult twoViewTransverseOverlapResult(matchingScore, twoViewXOverlap);
 
->>>>>>> e0aa15953c0fc8056ebaa237cef98c84eeba1fea
     if (xOverlap > std::numeric_limits<float>::epsilon())
         m_overlapMatrix.SetOverlapResult(pCluster1, pCluster2, twoViewTransverseOverlapResult);
 
