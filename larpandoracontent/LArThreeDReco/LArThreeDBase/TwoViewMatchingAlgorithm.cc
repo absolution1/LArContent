@@ -13,6 +13,7 @@
 #include "larpandoracontent/LArObjects/LArTrackTwoViewOverlapResult.h"
 
 #include "larpandoracontent/LArThreeDReco/LArThreeDBase/TwoViewMatchingAlgorithm.h"
+ #include "larpandoracontent/LArControlFlow/MultiPandoraApi.h"
 
 using namespace pandora;
 
@@ -193,6 +194,13 @@ void TwoViewMatchingAlgorithm<T>::PerformMainLoop()
         for (const Cluster *const pCluster2 : clusterVector2)
             this->CalculateOverlapResult(pCluster1, pCluster2);
     }
+    const pandora::Pandora * primary_pandora = MultiPandoraApi::GetPrimaryPandoraInstance(&(this->GetPandora()));
+    //PANDORA_MONITORING_API(Create(*primary_pandora));
+    //PANDORA_MONITORING_API(SaveTree(*primary_pandora, "matchtree", "output.root", "RECREATE"));
+    //PANDORA_MONITORING_API(Delete(*primary_pandora));
+
+
+
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------
