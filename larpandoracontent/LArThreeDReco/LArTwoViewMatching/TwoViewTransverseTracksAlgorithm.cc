@@ -31,6 +31,7 @@ TwoViewTransverseTracksAlgorithm::TwoViewTransverseTracksAlgorithm() :
 
 void TwoViewTransverseTracksAlgorithm::CalculateOverlapResult(const Cluster *const pCluster1, const Cluster *const pCluster2)
 {
+    std::cout << "=======================NEXTCOMPARISON======================" << std::endl;
     float xMin1(0.f), xMax1(0.f), xMin2(0.f), xMax2(0.f);
     LArClusterHelper::GetClusterSpanX(pCluster1, xMin1, xMax1);
     LArClusterHelper::GetClusterSpanX(pCluster2, xMin2, xMax2);
@@ -54,17 +55,41 @@ void TwoViewTransverseTracksAlgorithm::CalculateOverlapResult(const Cluster *con
     pandora::CaloHitList overlapHits1, overlapHits2;
     LArClusterHelper::GetCaloHitListInBoundingBox(pCluster1, boundingBoxMin1, boundingBoxMax1, overlapHits1);
     LArClusterHelper::GetCaloHitListInBoundingBox(pCluster2, boundingBoxMin2, boundingBoxMax2, overlapHits2);
-    DiscreteCumulativeDistribution disCumulDist1, disCumulDist2;
-    LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(overlapHits1, disCumulDist1);
-    LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(overlapHits2, disCumulDist2);
+    
+    int NHits1(overlapHits1.size()), NHits2(overlapHits2.size());
 
-    if (0 == disCumulDist1.GetSize() || 0 == disCumulDist2.GetSize())
-        return;
+    int k(2);
+    int nSegments(1),nMaxSegments(7);
+    while ( (std::min(NHits1,NHits2)/k)>25 && k<nMaxSegments+1 )
+      {
+	nSegments = k;
+	k++;
+      }
 
-    float matchingScore(LArDiscreteCumulativeDistributionHelper::CalculatePValueWithKSTestStatistic(disCumulDist1, disCumulDist2));
+    std::vector<pandora::CaloHitList> segmentedOverlapHits1, segmentedOverlapHits2;
 
-    TwoViewTransverseOverlapResult twoViewTransverseOverlapResult(matchingScore, twoViewXOverlap);
+    LArDiscreteCumulativeDistributionHelper::SplitCaloHitList(nSegments, xOverlap, overlapHits1, segmentedOverlapHits1);
+    LArDiscreteCumulativeDistributionHelper::SplitCaloHitList(nSegments, xOverlap, overlapHits2, segmentedOverlapHits2);
+    
+    for (int i = 0; i<nSegments; i++)
+    {
+	DiscreteCumulativeDistribution disCumulDist1, disCumulDist2;
+	//LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(overlapHits1, disCumulDist1);
+	//LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(overlapHits2, disCumulDist2);
 
+	LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(segmentedOverlapHits1[i], disCumulDist1);
+	LArDiscreteCumulativeDistributionHelper::CreateDistributionFromCaloHits(segmentedOverlapHits2[i], disCumulDist2);
+
+	if (0 == disCumulDist1.GetSize() || 0 == disCumulDist2.GetSize())
+	  return;
+
+	float matchingScoreKuip(LArDiscreteCumulativeDistributionHelper::CalculatePValueWithKuiperTestStatistic(disCumulDist1, disCumulDist2));
+	float matchingScoreKS(LArDiscreteCumulativeDistributionHelper::CalculatePValueWithKSTestStatistic(disCumulDist1, disCumulDist2));
+	std::cout << "MatchingScoreKUIPER: " << matchingScoreKuip << std::endl;
+	std::cout << "MatchingScoreKS: " << matchingScoreKS << std::endl;
+	}
+    TwoViewTransverseOverlapResult twoViewTransverseOverlapResult(1.2, twoViewXOverlap);
+    
     if (xOverlap > std::numeric_limits<float>::epsilon())
         m_overlapMatrix.SetOverlapResult(pCluster1, pCluster2, twoViewTransverseOverlapResult);
 }
