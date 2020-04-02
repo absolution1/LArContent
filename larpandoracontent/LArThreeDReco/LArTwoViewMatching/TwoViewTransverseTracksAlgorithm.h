@@ -12,8 +12,11 @@
 #include "Pandora/AlgorithmTool.h"
 
 #include "larpandoracontent/LArObjects/LArTrackTwoViewOverlapResult.h"
+#include "larpandoracontent/LArObjects/LArDiscreteCumulativeDistribution.h"
 
 #include "larpandoracontent/LArThreeDReco/LArThreeDBase/TwoViewTrackMatchingAlgorithm.h"
+
+#include <unsupported/Eigen/Splines>
 
 namespace lar_content
 {
@@ -32,8 +35,13 @@ public:
      *  @brief  Default constructor
      */
     TwoViewTransverseTracksAlgorithm();
+    virtual ~TwoViewTransverseTracksAlgorithm();
 
+    typedef Eigen::Spline<float, 1, 1> Spline1f;
+    typedef std::vector<std::pair<float,float> > ChargeProfile;
 private:
+
+
     void CalculateOverlapResult(const pandora::Cluster *const pCluster1, const pandora::Cluster *const pCluster2);
     void ExamineOverlapContainer();
     pandora::StatusCode ReadSettings(const pandora::TiXmlHandle xmlHandle);
@@ -42,6 +50,10 @@ private:
     MatrixToolVector            m_algorithmToolVector;      ///< The algorithm tool vector
 
     unsigned int                m_nMaxMatrixToolRepeats;    ///< The maximum number of repeat loops over matrix tools
+
+    Spline1f CreateSplineFromCumulativeDistribution(const DiscreteCumulativeDistribution &cumulativeDistribution);
+    ChargeProfile CreateProfileFromCumulativeDistribution(const DiscreteCumulativeDistribution &cumulativeDistribution);
+    float CalculateCorrelationCoefficient(const ChargeProfile &profile1, const ChargeProfile &profile2);
 };
 
 //------------------------------------------------------------------------------------------------------------------------------------------
