@@ -39,6 +39,7 @@ public:
 
     typedef Eigen::Spline<float, 1, 1> Spline1f;
     typedef std::vector<std::pair<float,float> > ChargeProfile;
+    typedef std::vector<std::pair<float,float> > ScoreProfile;
 private:
 
 
@@ -56,6 +57,10 @@ private:
     float CalculateCorrelationCoefficient(const ChargeProfile &profile1, const ChargeProfile &profile2);
     float CalculateTTestValue(const float x, const float coefficient, const float dof);
     float CalculateTTestPValue(const ChargeProfile &profile1, const ChargeProfile &profile2);
+    ScoreProfile SlidingWindowMatchingScore(const size_t &sizeWindowInBins, const ChargeProfile &profile1, const ChargeProfile &profile2, float &fracGoodScore);
+    ChargeProfile   GetWindow(size_t &i, const size_t &sizeWindowInBins, const ChargeProfile &profile);
+    ScoreProfile SlidingWindowMatchingScore(const size_t &sizeWindowInBins, const DiscreteCumulativeDistribution &disCumulDist1, const DiscreteCumulativeDistribution &disCumulDist2, float &fracGoodScore);
+    ChargeProfile   GetWindow(size_t &i, const size_t &sizeWindowInBins, const DiscreteCumulativeDistribution &disCumulDist);
 };
 
 //------------------------------------------------------------------------------------------------------------------------------------------
