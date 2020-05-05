@@ -93,13 +93,6 @@ void TwoViewTransverseTracksAlgorithm::CalculateOverlapResult(const Cluster *con
       //std::cout<<"Cluster 1 spliney: " << q1 << "  Cluster 2 spliney =  " << q2 << std::endl;
 
     }
-    for (size_t i = 0; i < disCumulDist1.GetSize(); i++){
-        float x,y;
-        disCumulDist1.GetXandY(i,x,y);
-        float q1 = spline1(x).coeff(0);
-        float q2 = spline2(x).coeff(0);
-        std::cout<<"x: " << x << " y: " << y << " spliney: " << q1 << "   spline2y: " << q2 << std::endl;
-    }
 
     ChargeProfile profile1(CreateProfileFromCumulativeDistribution(resampledDisCumulDist1));
     ChargeProfile profile2(CreateProfileFromCumulativeDistribution(resampledDisCumulDist2));
